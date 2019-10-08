@@ -1,4 +1,5 @@
-import React from "react";
+import React, { Component } from "react";
+import Popup from "reactjs-popup";
 // nodejs library to set properties for components
 // react plugin for creating charts
 // @material-ui/core
@@ -21,6 +22,8 @@ import CardIcon from "components/Card/CardIcon.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import Button from "components/CustomButtons/Button.jsx"
 import dashboardStyle from "assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
+import * as listInfoPopupActions from '../module/listInfoPopup';
+import Inputrating from '../module/Inputrating';
 
 const styles = theme => ({
   actions: {
@@ -30,25 +33,47 @@ const styles = theme => ({
 
 
 export default class Instance extends React.Component{
-
+    state = {
+      rating : 0,
+      toggle : false,
+      showPopup : true,
+      name : 0
+    }
     constructor(props){
       super(props);
       this.state = {
         rating: 0,
-        toggle: false
+        toggle: false,
+        showPopup : true,
+        name : 0
       };
       this.popUp = this.popUp.bind(this);
     }
 
     popUp(){
       this.setState({
+        showPopup : !this.state.showPopup
+      })
+    }
+
+    handleClick = () => {
+      this.setState({
         
+      })
+      console.log(this.state.name)
+    }
+
+    handleChange = (e) => {
+      this.setState({
+        name : e.target.value
       })
     }
 
     render(){
       const classes = this.props.classes;
       const data  = this.props.data;
+
+      const listinfoPopupActions = this.props.listinfoPopupActions;
       return(
         <GridContainer>
           <Card xs={12} style={{flexDirection: 'row', justifyContent: 'flex-end' }}>
@@ -129,12 +154,28 @@ export default class Instance extends React.Component{
                 </CardFooter>
               </Card>
             </GridItem>
-            <Button  onClick={this.popUp} >
+            <div>
+              <Inputrating/>
+              
+              <button onClick = {this.handleClick} position = "right center">rating 입력</button>
+            </div>
+          {this.state.showPopup ? 
+          <Popup
+                  text = 'Click "Close Button" to hide popup'
+                  closePopup 
+                  = {this.popUp.bind(this)}
+          />
+          :null
+          }
+          <Popup trigger={<button>Auto Rating</button>} position="right center">
+              <div>Popup content here !!</div>
+          </Popup>
+            {/*<Button  onClick={this.popUp} >
               Rating Request
             </Button>
             <Button  onClick={this.popUp} >
               Auto Rating
-            </Button>
+      </Button>*/}
           </Card>
         </GridContainer>
       );
