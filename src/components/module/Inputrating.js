@@ -4,12 +4,16 @@ import Instance from "../InstanceList/Instance";
 
 class Inputrating extends Component {
   state = {
-    name: ''
+    namec : 0,
+    showPopup : true
   }
+
   handleChange = (e) => {
     this.setState({
-      name: e.target.value
+      namec: e.target.value
     })
+    console.log(e.target.value)
+    return <div> <Instance rating = {e.target.value}/> </div>
   }
 
   render() {
@@ -17,10 +21,10 @@ class Inputrating extends Component {
       <form>
         <input
           placeholder="rating"
-          value={this.state.name}
-          onChange={this.handleChange}
+          value={this.state.namec}
+          onChange={this.handleChange.bind(this)}
+          name = "name"
         />
-        <div>{this.state.name}</div>
       </form>
     );
   }

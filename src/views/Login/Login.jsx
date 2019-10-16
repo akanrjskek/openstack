@@ -33,6 +33,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import SnackbarContent from "components/Snackbar/SnackbarContent.jsx";
 import Admin from "layouts/Admin"
 import { Redirect } from 'react-router-dom';
+import { Component } from 'react';
 
 class LoginPage extends React.Component {
   constructor(){

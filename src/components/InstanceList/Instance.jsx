@@ -23,7 +23,7 @@ import CardFooter from "components/Card/CardFooter.jsx";
 import Button from "components/CustomButtons/Button.jsx"
 import dashboardStyle from "assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 import * as listInfoPopupActions from '../module/listInfoPopup';
-import Inputrating from '../module/Inputrating';
+import NewWindow from 'react-new-window'
 
 const styles = theme => ({
   actions: {
@@ -34,20 +34,36 @@ const styles = theme => ({
 
 export default class Instance extends React.Component{
     state = {
+      temp : 0,
+      temprating : 0,
       rating : 0,
+      tempc : 0,
+      tempm : 0,
+      tempd : 0,
+      thcpu : 0,
+      thmemory : 0,
+      thdisk : 0,
       toggle : false,
       showPopup : true,
+      thrating : false,
       name : 0
     }
     constructor(props){
       super(props);
       this.state = {
+        temp : 0,
         rating: 0,
+        thcpu : 0,
+        thmemory : 0,
+        thdisk : 0,
         toggle: false,
         showPopup : true,
+        thrating : false,
         name : 0
       };
       this.popUp = this.popUp.bind(this);
+      this.handleClick = this.handleClick.bind(this);
+      this.autothreshold = this.autothreshold.bind(this);
     }
 
     popUp(){
@@ -55,17 +71,71 @@ export default class Instance extends React.Component{
         showPopup : !this.state.showPopup
       })
     }
-
-    handleClick = () => {
+    togglepopup(){
       this.setState({
-        
+        thrating : !this.state.thrating
       })
-      console.log(this.state.name)
+    }
+
+    handleClick = (e) => {
+      this.setState({
+        rating : this.state.rating
+      })
+      console.log(this.state.rating)
+    }
+
+    autothreshold = () => {
+      this.setState({
+        rating : 50,
+        temp : 50
+      })
+      console.log(this.state.rating)
+    }
+
+    receive = () => {
+      this.setState({
+        rating : this.state.temprating,
+        temp : this.state.temprating
+      })
+    }
+
+    changeaodh = () => {
+      this.setState({
+        thcpu : this.state.tempc,
+        thmemory : this.state.tempm,
+        thdisk : this.state.tempd
+      })
     }
 
     handleChange = (e) => {
       this.setState({
-        name : e.target.value
+        temprating : e.target.value
+      })
+    }
+
+    cpuChange = (e) => {
+      this.setState({
+        tempc : e.target.value
+      })
+    }
+
+    memoryChange = (e) => {
+      this.setState({
+        tempm : e.target.value
+      })
+    }
+
+    diskChange = (e) => {
+      this.setState({
+        tempd : e.target.value
+      })
+    }
+
+    tempzero(){
+      this.setState({
+        temp : 0,
+        temprating : 0,
+        rating : 0
       })
     }
 
@@ -90,6 +160,8 @@ export default class Instance extends React.Component{
                   <h3 className={classes.cardTitle}>
                     {data.cpu}<small>%</small>
                   </h3>
+                  <p className={classes.cardCategory}>전체 : 4개</p>
+                  <p className={classes.cardCategory}>Threshold : {this.state.thcpu}%</p>
                 </CardHeader>
                 <CardFooter stats>
                   <div className={classes.stats}>
@@ -111,6 +183,8 @@ export default class Instance extends React.Component{
                   </CardIcon>
                   <p className={classes.cardCategory}>Memory</p>
                   <h3 className={classes.cardTitle}>{data.memory}<small>%</small></h3>
+                  <p className={classes.cardCategory}>전체 : 8GB</p>
+                  <p className={classes.cardCategory}>Threshold : {this.state.thmemory}%</p>
                 </CardHeader>
                 <CardFooter stats>
                   <div className={classes.stats}>
@@ -128,6 +202,8 @@ export default class Instance extends React.Component{
                   </CardIcon>
                   <p className={classes.cardCategory}>Storage</p>
                   <h3 className={classes.cardTitle}>{data.disk}<small>%</small></h3>
+                  <p className={classes.cardCategory}>전체 : 512GB</p>
+                  <p className={classes.cardCategory}>Threshold : {this.state.thdisk}%</p>
                 </CardHeader>
                 <CardFooter stats>
                   <div className={classes.stats}>
@@ -154,21 +230,55 @@ export default class Instance extends React.Component{
                 </CardFooter>
               </Card>
             </GridItem>
-            <div>
-              <Inputrating/>
+            
+          <Popup trigger={<button>AOTH Threshold</button>} position = "left bottom" >
+              <div>CPU</div>
+              <form>
+                <input
+                  placeholder="rating"
+                  value={this.state.tempc}
+                  onChange={this.cpuChange.bind(this)}
+                  name = "name"
+                />
+               </form>
+              <div>MEMORY</div>
+              <form>
+                <input
+                  placeholder="rating"
+                  value={this.state.tempm}
+                  onChange={this.memoryChange.bind(this)}
+                  name = "name"
+                />
+               </form>
+              <div>DISK</div>
+              <form>
+                <input
+                  placeholder="rating"
+                  value={this.state.tempd}
+                  onChange={this.diskChange.bind(this)}
+                  name = "name"
+                />
+               </form>
+              <button onClick = {this.changeaodh.bind(this)}>완료</button>
+          </Popup>
+          <Popup trigger={<button>stack Update</button>} position = "left bottom" >
+              <div>RATING : 0~100</div>
+              <form>
+                <input
+                  placeholder="rating"
+                  value={this.state.temprating}
+                  onChange={this.handleChange.bind(this)}
+                  name = "name"
+                />
+               </form>
+              <button onClick = {this.receive.bind(this)}>완료</button>
+              {this.state.temp > 50 ? alert("rating 위험!") : null}
+              {this.state.temp = 0}
               
-              <button onClick = {this.handleClick} position = "right center">rating 입력</button>
-            </div>
-          {this.state.showPopup ? 
-          <Popup
-                  text = 'Click "Close Button" to hide popup'
-                  closePopup 
-                  = {this.popUp.bind(this)}
-          />
-          :null
-          }
-          <Popup trigger={<button>Auto Rating</button>} position="right center">
-              <div>Popup content here !!</div>
+          </Popup>
+          <Popup trigger={<button>Auto Rating</button>} position="left bottom">
+              <div>자동 레이팅 조사하시겠습니까?</div>
+              <button onClick = {this.autothreshold.bind(this)}>Yes</button>
           </Popup>
             {/*<Button  onClick={this.popUp} >
               Rating Request
